@@ -5,8 +5,11 @@ ini_set('display_errors', 1);
 
 session_start();
 
-// Base URL otomatis, mengikuti lokasi folder public di server
-define('BASE_URL', rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/'));
+// Folder public di server (bisa mengandung spasi, mis. "/acara 12/public")
+$scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+
+// BASE_URL di-encode per segmen supaya spasi menjadi %20 (aman untuk link & redirect)
+define('BASE_URL', implode('/', array_map('rawurlencode', explode('/', $scriptDir))));
 
 
 require_once __DIR__ . '/../app/Controllers/BaseController.php';
@@ -18,20 +21,16 @@ require_once __DIR__ . '/../app/Controllers/DosenController.php';
 // Load routes
 require_once __DIR__ . '/../routes/web.php';
 
-// Ambil URL
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// Ambil URL lalu decode (%20 -> spasi) supaya cocok dengan $scriptDir
+$requestUri = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
 // Hilangkan base path (folder public)
-$basePath = dirname($_SERVER['SCRIPT_NAME']);
-
-if ($basePath !== '/') {
-    $requestUri = str_replace($basePath, '', $requestUri);
+if ($scriptDir !== '' && strpos($requestUri, $scriptDir) === 0) {
+    $requestUri = substr($requestUri, strlen($scriptDir));
 }
 
-// Pastikan diawali /
-if ($requestUri === '') {
-    $requestUri = '/';
-}
+// Pastikan diawali / dan tanpa slash di akhir
+$requestUri = '/' . trim($requestUri, '/');
 
 // Routing
 if (isset($routes[$requestUri])) {

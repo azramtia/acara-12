@@ -32,6 +32,10 @@
                         <h4 class="text-center mb-4">
                             Login
                         </h4>
+                           <?php if (!empty($error)): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($error) ?>
+            </div>
+                <?php endif; ?>
 
                         <form action="<?= BASE_URL ?>/login/process" method="POST">
 

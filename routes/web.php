@@ -4,6 +4,7 @@ $routes = [
     '/' => ['DashboardController', 'index'],
     '/dashboard' => ['DashboardController', 'index'],
     '/login' => ['AuthController', 'loginForm'],
+    '/login/process' => ['AuthController', 'process'],
 
     '/mahasiswa' => ['MahasiswaController', 'index'],
     '/mahasiswa/create' => ['MahasiswaController', 'create'],
