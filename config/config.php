@@ -1,3 +1,3 @@
 <?php 
 
-define('APP_NAME', 'Sistem Informasi Akadamik');
+define('APP_NAME', 'Sistem Informasi Akademik');
